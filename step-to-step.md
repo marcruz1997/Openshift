@@ -69,10 +69,12 @@ oc login -u kubeadmin -p kubeadmin https://api.sno.testing:6443
 
 # Criar um novo namespace
 oc new-project nfsprovisioner-operator
-2. Implantar o NFS Provisioner Operator
-yaml
-Copy
-Edit
+```
+
+### 2. Implantar o NFS Provisioner Operator
+
+``` yaml
+
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
@@ -84,15 +86,17 @@ spec:
   name: nfs-provisioner-operator
   source: community-operators
   sourceNamespace: openshift-marketplace
-bash
-Copy
-Edit
+```
+
+```bash
 # Aplicar o manifest
 oc apply -f subscription.yaml
-3. Criar Diretório NFS Local no Nó SNO
-bash
-Copy
-Edit
+```
+
+### 3. Criar Diretório NFS Local no Nó SNO
+
+
+
 # Verificar nome dos nós
 oc get nodes
 
