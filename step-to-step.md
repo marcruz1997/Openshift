@@ -95,32 +95,37 @@ oc apply -f subscription.yaml
 
 ### 3. Criar Diretório NFS Local no Nó SNO
 
-
-
+```bash
 # Verificar nome dos nós
 oc get nodes
-
+```
+```bash
 # Definir variável com o nome do nó alvo
 export target_node=$(oc get node --no-headers -o name|cut -d'/' -f2)
-
+```
+```bash
 # Adicionar label no nó
 oc label node/${target_node} app=nfs-provisioner
+```
 
+```bash
 # Acessar via debug
 oc debug node/${target_node}
-Dentro do shell do debug:
+```
 
-bash
-Copy
-Edit
+```bash
+# Dentro do shell do debug:
 chroot /host
 mkdir -p /home/core/nfs
 chcon -Rvt svirt_sandbox_file_t /home/core/nfs
 exit; exit
-4. Criar o Servidor NFS via Recurso NFSProvisioner
-yaml
-Copy
-Edit
+```
+
+
+### 4. Criar o Servidor NFS via Recurso NFSProvisioner
+
+```yaml
+
 apiVersion: cache.jhouse.com/v1alpha1
 kind: NFSProvisioner
 metadata:
@@ -130,45 +135,54 @@ spec:
   nodeSelector: 
     app: nfs-provisioner
   hostPathDir: "/home/core/nfs"
-bash
-Copy
-Edit
+```
+
+```bash
 # Aplicar o recurso
 oc apply -f nfsprovisioner.yaml
+```
 
+```bash
 # Verificar pod
 oc get pods -n nfsprovisioner-operator
-5. Tornar o StorageClass NFS como Padrão
-bash
-Copy
-Edit
+```
+
+### 5. Tornar o StorageClass NFS como Padrão
+
+
+```bash
 # Atualizar anotação do StorageClass
 oc patch storageclass nfs -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+```
 
+```bash 
 # Verificar se foi atualizado
 oc get sc
-✅ Validação do Provisionamento
-Criar PVC de Teste
-bash
-Copy
-Edit
-oc apply -f https://raw.githubusercontent.com/Jooho/jhouse_openshift/master/test_cases/operator/test/test-pvc.yaml
-Verificar PVC e PV
-bash
-Copy
-Edit
-oc get pv,pvc
-Se o PVC estiver com STATUS = Bound, o provisionamento foi bem-sucedido!
+```
 
-Compatibilizar StorageProfile com o Virtualization
-bash
-Copy
-Edit
+### 6. ✅ Validação do Provisionamento
+
+
+```bash
+#Criar PVC de Teste
+oc apply -f https://raw.githubusercontent.com/Jooho/jhouse_openshift/master/test_cases/operator/test/test-pvc.yaml
+```
+
+```bash 
+# Verificar PVC e PV
+
+oc get pv,pvc
+```
+##### Se o PVC estiver com STATUS = Bound, o provisionamento foi bem-sucedido!
+
+### 7. Compatibilizar StorageProfile com o Virtualization
+
+```bash
 # Listar StorageProfiles
 oc get storageprofile
-bash
-Copy
-Edit
+```
+
+```bash
 # Atualizar o StorageProfile do NFS
 oc patch storageprofile nfs --type=merge -p '{
   "spec": {
@@ -184,7 +198,9 @@ oc patch storageprofile nfs --type=merge -p '{
     ]
   }
 }'
-✅ Considerações Finais
+```
+
+### 8. ✅ Considerações Finais
 Com esse setup, seu ambiente SNO com OpenShift Virtualization pode provisionar armazenamento persistente de forma automática e reutilizável, utilizando apenas recursos locais do cluster.
 
 Essa solução é ideal para:
@@ -195,13 +211,7 @@ Essa solução é ideal para:
 
 ☁️ Evitar dependência de storage externo ou nuvens públicas
 
-yaml
-Copy
-Edit
-
 ---
-
-Se quiser, posso gerar o arquivo `.md` para você já com esse conteúdo pronto para usar. Quer?
 
 
 
