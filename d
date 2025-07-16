@@ -1,56 +1,69 @@
-Criar e Gerenciar Volumes Persistentes Locais para OpenShift Virtualization com NFS Provisioner Operator (em SNO)
-Introdução
-No OpenShift Virtualization, as máquinas virtuais (VMs) requerem armazenamento persistente para manter dados mesmo após reinicializações ou migrações. Esse armazenamento é fornecido por Persistent Volumes (PVs), que persistem além do ciclo de vida de pods ou VMs.
+# Criar e Gerenciar Volumes Persistentes Locais para OpenShift Virtualization com NFS Provisioner Operator (em SNO)
 
-Este artigo demonstra como configurar e gerenciar volumes persistentes locais em um ambiente Single Node OpenShift (SNO) usando o NFS Provisioner Operator, uma solução de provisionamento dinâmico via NFS, ideal para laboratórios locais, testes e desenvolvimento com OpenShift Virtualization — especialmente quando não há um backend de armazenamento externo.
+## Introdução
 
-Contexto e Desafios em Ambientes SNO
-Tradicionalmente, os PVs eram criados manualmente por administradores, exigindo pré-provisionamento e causando ineficiência. A chegada do provisionamento dinâmico via StorageClass simplificou esse processo, mas ambientes SNO, por padrão, não oferecem um provisionador de armazenamento nativo.
+No OpenShift Virtualization, as máquinas virtuais (VMs) requerem armazenamento persistente para manter dados mesmo após reinicializações ou migrações. Esse armazenamento é fornecido por **Persistent Volumes (PVs)**, que persistem além do ciclo de vida de pods ou VMs.
 
-NFS Provisioner Operator como Solução
-O NFS Provisioner Operator, disponível no OperatorHub.io, implanta um servidor NFS no próprio cluster e configura o provisionador de subdiretórios do projeto kubernetes-sigs/nfs-subdir-external-provisioner.
+Este artigo demonstra como configurar e gerenciar volumes persistentes locais em um ambiente **Single Node OpenShift (SNO)** usando o **NFS Provisioner Operator**, uma solução de provisionamento dinâmico via NFS, ideal para laboratórios locais, testes e desenvolvimento com OpenShift Virtualization — especialmente quando não há um backend de armazenamento externo.
 
-Vantagens em ambientes SNO:
-✅ Permite o provisionamento automático de volumes NFS para VMs
+---
 
-✅ Instalação fácil via OperatorHub ou YAML
+## Contexto e Desafios em Ambientes SNO
 
-✅ Solução leve para uso local, sem necessidade de storage externo
+Tradicionalmente, os PVs eram criados manualmente por administradores, exigindo pré-provisionamento e causando ineficiência. A chegada do provisionamento dinâmico via `StorageClass` simplificou esse processo, mas ambientes SNO, por padrão, **não oferecem um provisionador de armazenamento nativo**.
 
-✅ Compatível com os discos virtuais usados por VMs do OpenShift Virtualization
+---
 
-Como Funciona
-O operador instala um servidor NFS dentro do cluster (em SNO)
+## NFS Provisioner Operator como Solução
 
-Um StorageClass é criado apontando para o provisionador
+O **NFS Provisioner Operator**, disponível no [OperatorHub.io](https://operatorhub.io), implanta um servidor NFS no próprio cluster e configura o provisionador de subdiretórios do projeto [`kubernetes-sigs/nfs-subdir-external-provisioner`](https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner).
 
-Quando uma VM solicita um PVC usando essa StorageClass, o provisionador cria um diretório no servidor NFS
+### Vantagens em ambientes SNO:
 
-A VM monta esse volume e o utiliza como disco persistente
+- ✅ Permite o provisionamento automático de volumes NFS para VMs  
+- ✅ Instalação fácil via OperatorHub ou YAML  
+- ✅ Solução leve para uso local, sem necessidade de storage externo  
+- ✅ Compatível com os discos virtuais usados por VMs do OpenShift Virtualization
 
-Fluxo Geral
-Etapa	Descrição
-Instalar o NFS Provisioner	Via OperatorHub ou YAML
-Criar StorageClass	Aponta para o provisionador NFS
-Criar PVC para a VM	Usa a StorageClass NFS
-Usar PVC na VM	VM monta o volume
+---
 
-Por que usar no SNO?
-O Single Node OpenShift é ideal para testes e desenvolvimento locais, permitindo rodar OpenShift e Virtualization em um único nó físico. No entanto, ele não inclui um provisionador de storage dinâmico por padrão, limitando o uso de PVCs com VMs.
+## Como Funciona
+
+1. O operador instala um servidor NFS dentro do cluster (em SNO)  
+2. Um `StorageClass` é criado apontando para o provisionador  
+3. Quando uma VM solicita um `PVC` usando essa `StorageClass`, o provisionador cria um diretório no servidor NFS  
+4. A VM monta esse volume e o utiliza como disco persistente  
+
+---
+
+## Fluxo Geral
+
+| Etapa                   | Descrição                        |
+|-------------------------|--------------------------------|
+| Instalar o NFS Provisioner | Via OperatorHub ou YAML       |
+| Criar StorageClass       | Aponta para o provisionador NFS |
+| Criar PVC para a VM      | Usa a StorageClass NFS          |
+| Usar PVC na VM           | VM monta o volume               |
+
+---
+
+## Por que usar no SNO?
+
+O **Single Node OpenShift** é ideal para testes e desenvolvimento locais, permitindo rodar OpenShift e Virtualization em um único nó físico. No entanto, ele **não inclui um provisionador de storage dinâmico por padrão**, limitando o uso de PVCs com VMs.
 
 Com o NFS Provisioner Operator, você:
 
-✅ Habilita o uso de volumes persistentes em VMs rodando no SNO
+- ✅ Habilita o uso de volumes persistentes em VMs rodando no SNO  
+- ✅ Elimina a necessidade de soluções externas de storage  
+- ✅ Recria cenários reais de produção em laboratório  
 
-✅ Elimina a necessidade de soluções externas de storage
+---
 
-✅ Recria cenários reais de produção em laboratório
+## 🛠️ Instalação Passo a Passo
 
-🛠️ Instalação Passo a Passo
-1. Login e Preparação
-bash
-Copy
-Edit
+### 1. Login e Preparação
+
+```bash
 # Login no cluster
 oc login -u kubeadmin -p kubeadmin https://api.sno.testing:6443 
 
@@ -60,7 +73,6 @@ oc new-project nfsprovisioner-operator
 yaml
 Copy
 Edit
-# subscription.yaml
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
@@ -92,10 +104,11 @@ oc label node/${target_node} app=nfs-provisioner
 
 # Acessar via debug
 oc debug node/${target_node}
+Dentro do shell do debug:
+
 bash
 Copy
 Edit
-# Dentro do debug:
 chroot /host
 mkdir -p /home/core/nfs
 chcon -Rvt svirt_sandbox_file_t /home/core/nfs
@@ -104,7 +117,6 @@ exit; exit
 yaml
 Copy
 Edit
-# nfsprovisioner.yaml
 apiVersion: cache.jhouse.com/v1alpha1
 kind: NFSProvisioner
 metadata:
@@ -178,3 +190,18 @@ Essa solução é ideal para:
 🧪 Realizar testes com alta fidelidade
 
 ☁️ Evitar dependência de storage externo ou nuvens públicas
+
+yaml
+Copy
+Edit
+
+---
+
+Se quiser, posso gerar o arquivo `.md` para você já com esse conteúdo pronto para usar. Quer?
+
+
+
+
+
+
+
