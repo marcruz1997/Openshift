@@ -64,6 +64,9 @@ sudo mount /dev/sda1 /mnt/data-nfs1
 
 ### 5. Configure automatic mounting
 
+##### Note: Why use UUID?
+The device name (e.g., /dev/sda1) can change if the disk is reconnected or if new devices are added. The UUID is unique and persistent for the partition, ensuring the system always mounts the correct disk.
+
 Get the UUID of the partition:
 
 ```bash
