@@ -89,11 +89,6 @@ spec:
 EOF
 ```
 
-```bash
-# Aplicar o manifest
-oc apply -f subscription.yaml
-```
-
 ### 3. Criar Diretório NFS Local no Nó SNO
 
 ```bash
