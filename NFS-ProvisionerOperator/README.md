@@ -74,6 +74,7 @@ oc new-project nfsprovisioner-operator
 ### 2. Deploy the NFS Provisioner Operator
 
 ``` yaml
+cat << EOF | oc apply -f -  
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
@@ -85,6 +86,7 @@ spec:
   name: nfs-provisioner-operator
   source: community-operators
   sourceNamespace: openshift-marketplace
+EOF
 ```
 
 ```bash
