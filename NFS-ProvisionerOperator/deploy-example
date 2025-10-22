@@ -1,0 +1,110 @@
+#deploy example - 10/2025
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfs-provisioner
+  namespace: nfsprovisioner-operator
+  labels:
+    app: nfs-provisioner
+    nfsprovisioner_cr: nfsprovisioner-sample
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nfs-provisioner
+      nfsprovisioner_cr: nfsprovisioner-sample
+  template:
+    metadata:
+      labels:
+        app: nfs-provisioner
+        nfsprovisioner_cr: nfsprovisioner-sample
+    spec:
+      serviceAccountName: nfs-provisioner
+      nodeSelector:
+        app: nfs-provisioner
+      containers:
+        - name: nfs-provisioner
+          image: registry.k8s.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            - name: SERVICE_NAME
+              value: nfs-provisioner
+            - name: PROVISIONER_NAME
+              value: example.com/nfs
+            - name: NFS_SERVER
+              value: 192.168.100.102
+            - name: NFS_PATH
+              value: /home/core/nfs
+          ports:
+            - name: nfs
+              containerPort: 2049
+              protocol: TCP
+            - name: nfs-udp
+              containerPort: 2049
+              protocol: UDP
+            - name: nlockmgr
+              containerPort: 32803
+              protocol: TCP
+            - name: nlockmgr-udp
+              containerPort: 32803
+              protocol: UDP
+            - name: mountd
+              containerPort: 20048
+              protocol: TCP
+            - name: mountd-udp
+              containerPort: 20048
+              protocol: UDP
+            - name: rquotad
+              containerPort: 875
+              protocol: TCP
+            - name: rquotad-udp
+              containerPort: 875
+              protocol: UDP
+            - name: rpcbind
+              containerPort: 111
+              protocol: TCP
+            - name: rpcbind-udp
+              containerPort: 111
+              protocol: UDP
+            - name: statd
+              containerPort: 662
+              protocol: TCP
+            - name: statd-udp
+              containerPort: 662
+              protocol: UDP
+          volumeMounts:
+            - name: export-volume
+              mountPath: /export
+          securityContext:
+            capabilities:
+              add: ["DAC_READ_SEARCH", "SYS_RESOURCE"]
+              drop: ["KILL", "MKNOD", "SYS_CHROOT"]
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      volumes:
+        - name: export-volume
+          hostPath:
+            path: /home/core/nfs
+            type: Directory
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      terminationGracePeriodSeconds: 30
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
