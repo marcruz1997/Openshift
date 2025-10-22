@@ -119,7 +119,7 @@ exit; exit
 
 
 ### 4. Criar o Servidor NFS via Recurso NFSProvisioner
-Caso nao funcione verifiquei o Deploy-example
+********Caso nao funcione verifique o Deploy-example**************
 ```yaml
 
 apiVersion: cache.jhouse.com/v1alpha1
