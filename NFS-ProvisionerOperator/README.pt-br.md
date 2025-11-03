@@ -119,7 +119,7 @@ exit; exit
 
 
 ### 4. Criar o Servidor NFS via Recurso NFSProvisioner
-********Caso nao funcione verifique o Deploy-example**************
+
 ```yaml
 
 apiVersion: cache.jhouse.com/v1alpha1
@@ -128,9 +128,12 @@ metadata:
   name: nfsprovisioner-sample
   namespace: nfsprovisioner-operator
 spec:
-  nodeSelector: 
+  hostPathDir: /home/core/nfs
+  nfsImageConfiguration:
+    image: 'registry.k8s.io/sig-storage/nfs-provisioner:v4.0.8'
+    imagePullPolicy: IfNotPresent
+  nodeSelector:
     app: nfs-provisioner
-  hostPathDir: "/home/core/nfs"
 ```
 
 ```bash
