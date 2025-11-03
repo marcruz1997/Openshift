@@ -126,9 +126,12 @@ metadata:
   name: nfsprovisioner-sample
   namespace: nfsprovisioner-operator
 spec:
-  nodeSelector: 
+  hostPathDir: /home/core/nfs
+  nfsImageConfiguration:
+    image: 'registry.k8s.io/sig-storage/nfs-provisioner:v4.0.8'
+    imagePullPolicy: IfNotPresent
+  nodeSelector:
     app: nfs-provisioner
-  hostPathDir: "/home/core/nfs"
 ```
 
 ```bash
