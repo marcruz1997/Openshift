@@ -28,15 +28,6 @@ Virtualization**.
 
 ------------------------------------------------------------------------
 
-## 📂 Estrutura
-
-    /docs          # Guias e artigos curtos
-    /examples      # YAMLs prontos
-    /scripts       # Automação e utilitários
-    /tshoot        # Erros e soluções
-
-------------------------------------------------------------------------
-
 ## 📬 Autor
 
 **Marcos Cruz**\
