@@ -247,7 +247,7 @@ $ oc patch Bucketclass noobaa-default-bucket-class -n openshift-storage --type=j
 
 ## Remove the Old Default Backing Storage
 
-This step requires the **Noobaa CLI**.
+This step requires the **Noobaa CLI**. https://github.com/noobaa/noobaa-operator/releases/download/v5.17.2/noobaa-operator-v5.17.2-linux-amd64.tar.gz
 
 ```bash
 $ tar xzvf noobaa-operator-v5.17.2-linux-amd64.tar.gz .
