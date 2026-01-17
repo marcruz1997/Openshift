@@ -155,126 +155,125 @@ You can use the following template to configure monitoring:
 apiVersion: v1
 kind: ConfigMap
 metadata:
- name: cluster-monitoring-config
- namespace: openshift-monitoring
+  name: cluster-monitoring-config
+  namespace: openshift-monitoring
 data:
- config.yaml: |+
-   alertmanagerMain:
-     volumeClaimTemplate:
-       metadata:
-         name: pvc-alertmanager
-       spec:
-         storageClassName: thin-csi
-         resources:
-           requests:
-             storage: 2Gi
-     nodeSelector:
-       node-role.kubernetes.io/infra: ""
-     tolerations:
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoSchedule
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoExecute
-   prometheusK8s:
-     volumeClaimTemplate:
-       metadata:
-         name: pvc-prometheus
-       spec:
-         storageClassName: thin-csi
-         resources:
-           requests:
-             storage: 100Gi
-     nodeSelector:
-       node-role.kubernetes.io/infra: ""
-     tolerations:
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoSchedule
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoExecute
-   prometheusOperator:
-     nodeSelector:
-       node-role.kubernetes.io/infra: ""
-     tolerations:
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoSchedule
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoExecute
-   k8sPrometheusAdapter:
-     nodeSelector:
-       node-role.kubernetes.io/infra: ""
-     tolerations:
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoSchedule
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoExecute
-   kubeStateMetrics:
-     nodeSelector:
-       node-role.kubernetes.io/infra: ""
-     tolerations:
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoSchedule
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoExecute
-   telemeterClient:
-     nodeSelector:
-       node-role.kubernetes.io/infra: ""
-     tolerations:
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoSchedule
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoExecute
-   openshiftStateMetrics:
-     nodeSelector:
-       node-role.kubernetes.io/infra: ""
-     tolerations:
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoSchedule
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoExecute
-   thanosQuerier:
-     nodeSelector:
-       node-role.kubernetes.io/infra: ""
-     tolerations:
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoSchedule
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoExecute
-   monitoringPlugin:
-     nodeSelector:
-       node-role.kubernetes.io/infra: ""
-     tolerations:
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoSchedule
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoExecute
-   metricsServer:
-     nodeSelector:
-       node-role.kubernetes.io/infra: ""
-     tolerations:
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoSchedule
-     - key: node.role.kubernetes.io/infra
-       value: reserved
-       effect: NoExecute
+  config.yaml: |+
+    alertmanagerMain:
+      volumeClaimTemplate:
+        metadata:
+          name: pvc-alertmanager
+        spec:
+          storageClassName: thin-csi
+          resources:
+            requests:
+              storage: 2Gi
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+
+    prometheusK8s:
+      volumeClaimTemplate:
+        metadata:
+          name: pvc-prometheus
+        spec:
+          storageClassName: thin-csi
+          resources:
+            requests:
+              storage: 100Gi
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+
+    prometheusOperator:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+
+    kubeStateMetrics:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+
+    telemeterClient:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+
+    openshiftStateMetrics:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+
+    thanosQuerier:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+
+    monitoringPlugin:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+
+    metricsServer:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+
 ```
 
 ---
